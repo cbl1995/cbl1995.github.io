@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    mysql简介 |
+    
+    Hexo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/technology.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <section class="outer">
+  <article id="post-mysql简介" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mysql简介
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2020/01/15/mysql%E7%AE%80%E4%BB%8B/" class="article-date">
+  <time datetime="2020-01-15T12:45:19.470Z" itemprop="datePublished">2020-01-15</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>索引是存储引擎快速找到记录的一种数据结构。</p>
+<h2 id="索引的数据结构"><a href="#索引的数据结构" class="headerlink" title="索引的数据结构"></a>索引的数据结构</h2><p>使用B+Tree(绝大多数场景使用)或者HASH表</p>
+<p>索引分为两种</p>
+<h2 id="B-Tree数据结构"><a href="#B-Tree数据结构" class="headerlink" title="B+Tree数据结构"></a>B+Tree数据结构</h2><p><img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2749574805,2339136458&fm=26&gp=0.jpg" alt="img"></p>
+<p>B+Tree与红黑树的区别在于，B+Tree可以用多个根节点，而且每个父节点，可以有多个子节点。</p>
+<p>mqsql查询是先将数据从硬盘读到内存中，这个过程记为一次磁盘IO，操作系统一般是按照页进行操作，mysql默认一页是4KB。</p>
+<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>数据库存储引擎是数据库底层软件组件，数据库管理系统使用数据引擎进行创建、查询、更新和删除数据操作。不同的存储引擎提供不同的存储机制、索引技巧、锁定水平等功能，使用不同的存储引擎还可以获得特定的功能。</p>
+<p>mysql的存储引擎是作用在表上面的，同一个数据库，下面不同的表，使用的存储引擎可能不一样</p>
+<p>存储引擎大致分为两种：</p>
+<ol>
+<li><p>mylsam</p>
+</li>
+<li><p>innodb</p>
+<h3 id="MYLSAM存储引擎"><a href="#MYLSAM存储引擎" class="headerlink" title="MYLSAM存储引擎"></a>MYLSAM存储引擎</h3><p>mylsam是索引文件和数据文件不在同一个文件内。当进行查询的时候，索引文件存储着这一行数据的内存地址。然后通过磁盘地址查询到这条记录，这个过程还需要进行一次磁盘IO。</p>
+<h3 id="INNODB存储引擎"><a href="#INNODB存储引擎" class="headerlink" title="INNODB存储引擎"></a>INNODB存储引擎</h3><p>INNODB是数据文件和索引文件在同一个文件内，索引文件存储着这一行数据的其他数据。</p>
+<p>INNODB必须有一个主键，一般使用自增的整形数字。假如创建表的时候，没有指定主键ID,mysql会自动的创建一个隐藏的id,然后用这个id去作为B+TREE的节点。</p>
+<p>自增型的主键ID,比UUID的主键ID好。应为在使用了B+TREE,数字类型比较大小的速度要优越于字符串，字符串先需要转化为ASCII，然后再进行比较。</p>
+</li>
+</ol>
+<h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h2><h3 id="B-TREE"><a href="#B-TREE" class="headerlink" title="B+TREE"></a>B+TREE</h3><p>B+TREE，使用的数据结构是B+TREE.</p>
+<h3 id="HASH"><a href="#HASH" class="headerlink" title="HASH"></a>HASH</h3><p>HASH使用的是hash表，hash表假如使用了范围查询会进行全表扫描</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/15/mysql%E7%AE%80%E4%BB%8B/" data-id="ck5fbhp860005b4utcytigf0i"
+         class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2020/01/15/transient%E5%85%B3%E9%94%AE%E5%AD%97/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            transient关键字
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/01/15/mqsql%E4%BC%98%E5%8C%96/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">mqsql优化</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+    </div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+<script src="/js/technology.js"></script>
+
+
+  </div>
+</body>
+</html>

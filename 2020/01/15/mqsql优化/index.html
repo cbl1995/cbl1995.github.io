@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    mqsql优化 |
+    
+    Hexo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/technology.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <section class="outer">
+  <article id="post-mqsql优化" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mqsql优化
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2020/01/15/mqsql%E4%BC%98%E5%8C%96/" class="article-date">
+  <time datetime="2020-01-15T12:45:19.464Z" itemprop="datePublished">2020-01-15</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <ol>
+<li><p>B-tree索引 is null不会走,is not null会走,位图索引 is null,is not null 都会走。</p>
+</li>
+<li><p>mysql索引查询会遵循最左匹配的原则，当我们创建了一个联合索引例如index(a,b,c,d),其实相当与创建了index1(a),index2(a,b),index3(a,b,c),index4(a,b,c,d)。</p>
+<ol>
+<li>如果查找不从索引列的最左边开始，索引无法使用。</li>
+<li>不能跳过索引中的列。</li>
+<li>联合索引中的排序，必须报纸一致，否则索引也会失效。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">sql语句</th>
+<th align="center">索引是否有效</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">where a=1</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">where  b=1</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">where a=1 and b&gt;2</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">where a=1 and c&gt;3</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">where a=1 and b in (2,3) and c&lt;3</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">where a=1 order by b,c desc</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">where a=1 order by b asc,c desc</td>
+<td align="center">false</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>不要使用not in，不走索引。</p>
+</li>
+<li><p>union和uniona all,尽量使用union all，两者的区别是union会对相同的数据去重，union all不会。</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/15/mqsql%E4%BC%98%E5%8C%96/" data-id="ck5fbhp840002b4ut5izodfpv"
+         class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2020/01/15/mysql%E7%AE%80%E4%BB%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            mysql简介
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/01/15/hello-world/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Hello World</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+    </div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+<script src="/js/technology.js"></script>
+
+
+  </div>
+</body>
+</html>

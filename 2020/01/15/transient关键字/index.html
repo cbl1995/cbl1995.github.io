@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    transient关键字 |
+    
+    Hexo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/technology.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <section class="outer">
+  <article id="post-transient关键字" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      transient关键字
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2020/01/15/transient%E5%85%B3%E9%94%AE%E5%AD%97/" class="article-date">
+  <time datetime="2020-01-15T12:45:19.477Z" itemprop="datePublished">2020-01-15</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <p>​        java的serialization提供了一个非常棒的存储对象状态的机制，说白了serialization就是把对象的状态存储到硬盘上去，等需要的时候就可以再把它读出来使用。但是在存储对象状态时，我们有时候会需要特定的对象数据在serialization时不进行存储。这时候transient关键字就派上用场了。要关掉类的特定的数据域，可以使用transient关键字进行定义，这对于底层的java虚拟机来说，这个transient类型的变量不是一个类的永久性的状态。</p>
+<p>demo:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggingInfo</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Date loggingDate = <span class="keyword">new</span> Date();</span><br><span class="line">    <span class="keyword">private</span> String uid;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> String pwd;</span><br><span class="line"></span><br><span class="line">    LoggingInfo(String user, String password)</span><br><span class="line">    &#123;</span><br><span class="line">        uid = user;</span><br><span class="line">        pwd = password;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        String password=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(pwd == <span class="keyword">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">        password = <span class="string">"NOT SET"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            password = pwd;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"logon info: /n   "</span> + <span class="string">"user: "</span> + uid +</span><br><span class="line">            <span class="string">"/n   logging date : "</span> + loggingDate.toString() +</span><br><span class="line">            <span class="string">"/n   password: "</span> + password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">LoggingInfo logInfo = <span class="keyword">new</span> LoggingInfo(<span class="string">"MIKE"</span>, <span class="string">"MECHANICS"</span>);</span><br><span class="line">System.out.println(logInfo.toString());</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">   ObjectOutputStream o = <span class="keyword">new</span> ObjectOutputStream(</span><br><span class="line">                <span class="keyword">new</span> FileOutputStream(<span class="string">"logInfo.out"</span>));</span><br><span class="line">   o.writeObject(logInfo);</span><br><span class="line">   o.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(Exception e) &#123;<span class="comment">//deal with exception&#125;</span></span><br><span class="line">  System.out.println(<span class="string">"hello world !"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">   ObjectInputStream in =<span class="keyword">new</span> ObjectInputStream(</span><br><span class="line">                <span class="keyword">new</span> FileInputStream(<span class="string">"logInfo.out"</span>));</span><br><span class="line">   LoggingInfo logInfo1 = (LoggingInfo)in.readObject();</span><br><span class="line">   System.out.println(logInfo1.toString());</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line"><span class="comment">//deal with exception</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  生成了logInfo.out文件，是用来serialization进行存放类对象数据的，进行存储后又对这个文件进行读，读的内容如下为第二个logon info后面的内容。<br>    输出结果如下：<br>logon info:<br>   user: MIKE<br>   logging date : Mon Oct 30 21:39:58 CST 2006<br>   password: MECHANICS<br>logon info:<br>   user: MIKE<br>   logging date : Mon Oct 30 21:39:58 CST 2006<br>   password: NOT SET</p>
+<p>​    我们可以看到读进去的password为MECHANICS，但是读出来的却是NOT SET，因为在serialization时，没有存储到硬盘上，因为pwd被定义为transient类型的。</p>
+<p>​    transient关键字也会产生副作用，见如下代码：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GuestLoggingInfo</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span></span><br><span class="line"><span class="class"></span>&#123; </span><br><span class="line">    <span class="keyword">private</span> Date loggingDate = <span class="keyword">new</span> Date(); </span><br><span class="line">    <span class="keyword">private</span> String uid; </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> String pwd; </span><br><span class="line">    </span><br><span class="line">    GuestLoggingInfo() </span><br><span class="line">    &#123; </span><br><span class="line">        uid = <span class="string">"guest"</span>; </span><br><span class="line">        pwd = <span class="string">"guest"</span>; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">    </span>&#123; </span><br><span class="line">        <span class="comment">//same as above </span></span><br><span class="line">     &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>读出来的pwd还是NOT SET，也就是默认的初始化是没有作用的。<br>来源： <a href="https://blog.csdn.net/scruffybear/article/details/1914586" target="_blank" rel="noopener">https://blog.csdn.net/scruffybear/article/details/1914586</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/15/transient%E5%85%B3%E9%94%AE%E5%AD%97/" data-id="ck5fbhp850003b4utg7ued9qt"
+         class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2020/01/15/%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+TREE%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            红黑树与B+TREE的区别
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/01/15/mysql%E7%AE%80%E4%BB%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">mysql简介</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+    </div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+<script src="/js/technology.js"></script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    微信开发者服务器验证 |
+    
+    Hexo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/technology.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <section class="outer">
+  <article id="post-微信开发者服务器验证" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      微信开发者服务器验证
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2020/01/15/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%AA%8C%E8%AF%81/" class="article-date">
+  <time datetime="2020-01-15T12:45:19.496Z" itemprop="datePublished">2020-01-15</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <h1 id="微信开发者服务器验证"><a href="#微信开发者服务器验证" class="headerlink" title="微信开发者服务器验证"></a>微信开发者服务器验证</h1><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>接入微信公众平台开发，开发者需要按照如下步骤完成：</p>
+<ul>
+<li>填写服务器配置</li>
+<li>验证服务器地址的有效性</li>
+<li>依据接口文档实现业务逻辑</li>
+<li><a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421135319" target="_blank" rel="noopener">官方指南文档</a></li>
+</ul>
+<p>具体实现代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/7  20:41</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Api</span>(tags = <span class="string">"微信小程序消息推送API"</span>)</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/wx/mini/message/push"</span>,produces = <span class="string">"application/json;charset=UTF-8"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WxminiMessagePushApi</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(WxminiMessagePushApi<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WxMiniSendCustomerServiceMessageComponent customerServiceMessageComponent;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;wxmini.appId&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String appId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;wxmini.accessToken&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span>  String accessToken;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;wxmini.encodingAesKey&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span>  String encodingAesKey;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation</span>(<span class="string">"验证消息的确来自微信服务器"</span>)</span><br><span class="line">    <span class="meta">@GetMapping</span>(value = <span class="string">"/check"</span> )</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkSign</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        logger.info(<span class="string">"token校验接口"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String signature = request.getParameter(<span class="string">"signature"</span>);</span><br><span class="line">            <span class="comment">// 时间戳</span></span><br><span class="line">            String timestamp = request.getParameter(<span class="string">"timestamp"</span>);</span><br><span class="line">            <span class="comment">// 随机数</span></span><br><span class="line">            String nonce = request.getParameter(<span class="string">"nonce"</span>);</span><br><span class="line">            <span class="comment">// 随机字符串  </span></span><br><span class="line">            String echostr = request.getParameter(<span class="string">"echostr"</span>);</span><br><span class="line"></span><br><span class="line">            logger.info(<span class="string">"验证消息的确来自微信服务器参数为:&#123;&#125;,&#123;&#125;,&#123;&#125;,&#123;&#125;"</span>,signature,timestamp,nonce,echostr);</span><br><span class="line">            List&lt;String&gt; list=<span class="keyword">new</span> ArrayList();</span><br><span class="line">            list.add(accessToken);</span><br><span class="line">            list.add(timestamp);</span><br><span class="line">            list.add(nonce);</span><br><span class="line"></span><br><span class="line">            Collections.sort(list);</span><br><span class="line">            String s=<span class="string">""</span>;</span><br><span class="line">            <span class="keyword">for</span> (String str : list) &#123;</span><br><span class="line">                s+=str;</span><br><span class="line">            &#125;</span><br><span class="line">            String result = DigestUtils.sha1Hex(s);</span><br><span class="line">            <span class="keyword">if</span> (signature.equals(result)) &#123;</span><br><span class="line">                logger.info(<span class="string">"校验通过"</span>);</span><br><span class="line">                response.getOutputStream().println(echostr);</span><br><span class="line">            &#125;</span><br><span class="line">            logger.info(<span class="string">"校验不通过"</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            logger.error(<span class="string">"验证消息的确来自微信服务器异常"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation</span>(<span class="string">"接收微信推送的消息"</span>)</span><br><span class="line">    <span class="meta">@PostMapping</span>(value = <span class="string">"/check"</span> )</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getMessage</span><span class="params">(HttpServletResponse response, WxMiniPushMessageDTO wxMiniPushMessageDTO , @RequestBody String requestBody)</span><span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        logger.info(<span class="string">"收消息接口：&#123;&#125;"</span>,requestBody);</span><br><span class="line"></span><br><span class="line">        WXBizMsgCrypt pc = <span class="keyword">new</span> WXBizMsgCrypt(accessToken, encodingAesKey, appId);</span><br><span class="line">        String str=pc.decryptMsg(wxMiniPushMessageDTO.getMsg_signature(), wxMiniPushMessageDTO.getTimestamp(), wxMiniPushMessageDTO.getNonce(), requestBody);</span><br><span class="line">        String openId=wxMiniPushMessageDTO.getOpenid();</span><br><span class="line">        <span class="comment">//收到消息体</span></span><br><span class="line">        JSONObject jsonObject = JSON.parseObject(requestBody);</span><br><span class="line">        String msgType = jsonObject.getString(<span class="string">"MsgType"</span>);</span><br><span class="line">        String event = jsonObject.getString(<span class="string">"Event"</span>);</span><br><span class="line">        <span class="comment">//业务逻辑处理.....</span></span><br><span class="line">        response.getOutputStream().println(<span class="string">"success"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ol>
+<li>代码里面的WXBizMsgCrypt类在微信提供的demo中存在。</li>
+<li>两个方法的请求路径相同，一个是验证是get请求，post为服务器转发的消息。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/15/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%AA%8C%E8%AF%81/" data-id="ck5fbhp870006b4ut17604hlk"
+         class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/01/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">设计模式之单例模式</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+    </div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+<script src="/js/technology.js"></script>
+
+
+  </div>
+</body>
+</html>

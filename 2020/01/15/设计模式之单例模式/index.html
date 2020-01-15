@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    设计模式之单例模式 |
+    
+    Hexo</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/technology.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <section class="outer">
+  <article id="post-设计模式之单例模式" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      设计模式之单例模式
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2020/01/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="article-date">
+  <time datetime="2020-01-15T12:45:19.487Z" itemprop="datePublished">2020-01-15</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>单例模式出现的目的是保证系统只有一个实例对象，而且提供一个全局的访问点。</p>
+<p>在下面几个场景中适合使用单例模式:</p>
+<ol>
+<li>资源共享的情况下，避免由于资源操作时导致的性能或损耗等。如日志文件，应用配置。</li>
+<li>控制资源的情况下，方便资源之间的互相通信。如线程池等。</li>
+</ol>
+<h2 id="常见的几种单例模式"><a href="#常见的几种单例模式" class="headerlink" title="常见的几种单例模式"></a>常见的几种单例模式</h2><ol>
+<li><p>懒汉式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cbl;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/9  21:01</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazySingle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 私有化构造方法,防止外部直接创建(但是反射可以)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">LazySingle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LazySingle lazySingle=<span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 对外提供获取实例的方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>:</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: com.cbl.LazySingle</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: CBL</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2020/1/9 21:07</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LazySingle <span class="title">getSingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (lazySingle==<span class="keyword">null</span>)&#123;</span><br><span class="line">·      &#125;</span><br><span class="line">      <span class="keyword">return</span> lazySingle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>不建议使用</strong> ,缺点如下：</p>
+<ol>
+<li><p>getSingle方法是线程不安全的，多线程的情况下，可以创建多个。</p>
+</li>
+<li><p>反射可以直接创建这个类的对象，。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cbl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/9  21:00</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">singleTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span><span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        LazySingle single = LazySingle.getSingle();</span><br><span class="line">        LazySingle singl1 = LazySingle.getSingle();</span><br><span class="line">        Constructor&lt;LazySingle&gt; constructor=LazySingle<span class="class">.<span class="keyword">class</span>.<span class="title">getDeclaredConstructor</span>()</span>;</span><br><span class="line">        <span class="comment">//2.设置取消访问检查，是访问私有构造方法的关键</span></span><br><span class="line">        constructor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//3.调用该构造方法，获得对象</span></span><br><span class="line">        LazySingle reflectSingle = constructor.newInstance();</span><br><span class="line">        <span class="keyword">if</span> (single==singl1)&#123;</span><br><span class="line">            System.out.println(<span class="string">"通过懒汉式获取的对象一样"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"通过懒汉式获取的对象不一样"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (single==reflectSingle)&#123;</span><br><span class="line">            System.out.println(<span class="string">"反射获取的对象一样"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"反射获取的对象不一样"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">通过懒汉式获取的对象一样</span><br><span class="line">反射获取的对象不一样</span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+</ol>
+</li>
+</ol>
+<ol start="2">
+<li><p>饿汉式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cbl.single;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/9  21:41</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HungrySingle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 私有化构造方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">HungrySingle</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 在加载类的时候，直接欸创建这个对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>   HungrySingle hungrySingle=<span class="keyword">new</span> HungrySingle();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对外提供获取对象的方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span>  HungrySingle <span class="title">getHungrySingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> hungrySingle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>优点：在不使用反射的情况下，可以保证对象的唯一。</li>
+<li>缺点：对象是在系统启动的时候创建的，假如对象创建需要消耗很大的资源会导致系统启动过慢。而且反射可以创建对象。</li>
+</ul>
+</li>
+<li><p>双重锁校验</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cbl.single;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/12  15:51</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DoubleLockSingle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 私有化构造方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DoubleLockSingle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 私有的对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  <span class="keyword">static</span> <span class="keyword">volatile</span> DoubleLockSingle doubleLockSingle=<span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 双重锁校验获取</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>:</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: com.cbl.single.DoubleLockSingle</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: CBL</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2020/1/12 16:00</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DoubleLockSingle <span class="title">getDoubleLockSingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 判断是否已经创建了对象，假如不为空，直接返回</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">if</span> (doubleLockSingle==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 加锁，一次只能一个线程去访问</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">synchronized</span> (DoubleLockSingle<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 假如这里不判断,那么会出现下线这种情况：</span></span><br><span class="line"><span class="comment">                 * 假如有两个线程，A线程执行完第一个判断是否为空，检测到为空，发现同步代码块里锁还					   没有释放，A线程进入线程等待.</span></span><br><span class="line"><span class="comment">                 * B线程已经在创建对象的过程中，那么等B线程执行完之后，A线程也会去创建对象，会导致				   创建了</span></span><br><span class="line"><span class="comment">                 * 所以里面必须要加个判断。</span></span><br><span class="line"><span class="comment">                 * 即使这样，双重校验锁也是有问题的，因为创建对象不是一步原子操作，而是分为三步</span></span><br><span class="line"><span class="comment">                 * 1.分配对象的内存空间</span></span><br><span class="line"><span class="comment">                 * 2.初始化对象，调用构造方法</span></span><br><span class="line"><span class="comment">                 * 3.将内存地址指向instance</span></span><br><span class="line"><span class="comment">                 * 而且2，3可能会重新排序，即创建对象的步骤可能是1-2-3，也有可能是1-3-2</span></span><br><span class="line"><span class="comment">                 * 假如是1-3-2</span></span><br><span class="line"><span class="comment">                 * B线程创建独享执行到3，此时对象不为空了，但是还没有初始化对象，调用构造方法</span></span><br><span class="line"><span class="comment">                 * 此时A线程在第一个判断的时候，判断了对象不为空，直接返回，这个时候返回的对象就会					   有问题。</span></span><br><span class="line"><span class="comment">                 * 所以对象用volatile修饰，可以保证对象创建的原子性.</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="keyword">if</span> (doubleLockSingle==<span class="keyword">null</span>)&#123;</span><br><span class="line">                    doubleLockSingle=<span class="keyword">new</span> DoubleLockSingle();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> doubleLockSingle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="4">
+<li><p>静态内部类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cbl.single;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/13  10:41</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>： 内部类单例模式</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InternalClassSingle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 私有化构造方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">InternalClassSingle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通过静态内部类创建一个对象</span></span><br><span class="line"><span class="comment">     * 在使用时才加载。不过在加载静态内部类的过程中也会加载外部类，相比于懒汉式来说，不需要再系统启动的时候去创建对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">Single</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span>  InternalClassSingle INTERNAL_CLASS_SINGLE=<span class="keyword">new</span> InternalClassSingle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 提供对外方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> InternalClassSingle <span class="title">getInterClassSingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Single.INTERNAL_CLASS_SINGLE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="5">
+<li><p>枚举</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">package</span> com.cbl.single;</span><br><span class="line">   </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@date</span> ：Created in 2020/1/13  11:23</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EnumSingle</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">       <span class="keyword">private</span> EnumSingle enumSingle;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">           <span class="keyword">static</span> <span class="keyword">enum</span> SingletonEnum&#123;</span><br><span class="line">   </span><br><span class="line">           <span class="comment">/**</span></span><br><span class="line"><span class="comment">            * 创建一个枚举对象，该对象天生为单例</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">           INSTANCE;</span><br><span class="line">           <span class="keyword">private</span> EnumSingle enumSingle;</span><br><span class="line">   </span><br><span class="line">           <span class="comment">/**</span></span><br><span class="line"><span class="comment">            * 私有化构造方法</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">           <span class="function"><span class="keyword">private</span>  <span class="title">SingletonEnum</span><span class="params">()</span></span>&#123;</span><br><span class="line">               enumSingle=<span class="keyword">new</span> EnumSingle();</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="function"><span class="keyword">public</span>  EnumSingle <span class="title">getEnumSingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">               <span class="keyword">return</span> enumSingle;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   </span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> EnumSingle <span class="title">getSingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">             <span class="keyword">return</span> SingletonEnum.INSTANCE.getEnumSingle();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>推荐使用枚举，反射也无法实例化对象。</strong></p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" data-id="ck5fbhp880007b4utgshu6qg7"
+         class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+      <a href="/2020/01/15/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%AA%8C%E8%AF%81/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            微信开发者服务器验证
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/01/15/%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8E%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">红黑树与平衡二叉树的区别</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+    </div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+<script src="/js/technology.js"></script>
+
+
+  </div>
+</body>
+</html>
