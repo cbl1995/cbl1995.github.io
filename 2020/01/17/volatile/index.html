@@ -82,17 +82,17 @@
 <p>运行结果：</p>
 <p>wait…………….<br>start…………….<br>end…………….</p>
 <p>流程图如下：</p>
-<p><img src="C:%5CUsers%5Ccblin%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1579169558232.png" alt="1579169558232"></p>
+<p><img src="/1579169558232.png" alt="1579169558232"></p>
 <p>线程1改变了Flag，但是由于线程2已经获取了主内存中的变量，加载进了线程的运行内存，运行内存已经有了变量的副本变量，主内存发生改变了，副本内存的值不会发生改变。</p>
 <p>此时，FLAG变量假如有volatile修饰的话，当主内存发生改变，线程内的副本变量也会随之改变。</p>
 <p>加了volatile关键字之后的流程图如下：</p>
-<p><img src="C:%5CUsers%5Ccblin%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1579225775041.png" alt="1579225775041"></p>
+<p><img src="/1579225775041.png" alt="1579225775041"></p>
 <p>volatile 其实底层就是加锁，利用了cpu总线嗅探机制，当线程1副本变量回写进主内存的时候，线程2的总线嗅探机制就会触发，会导致线程2里面的副本变量失效。当线程1在store操作的时候，就会进行lock操作，当完成write操作们就会释放锁。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/17/volatile/" data-id="ck5hiqi380006u8ut63aj9m23"
+      <a data-url="http://yoursite.com/2020/01/17/volatile/" data-id="ck5hj36r0000608ut6v84bo8f"
          class="article-share-link">分享</a>
       
     </footer>
