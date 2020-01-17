@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+    <meta name="description" content="路漫漫其修远兮，吾将上下而求索">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    volatile |
+    
+    小崔的博客</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/technology.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <section class="outer">
+  <article id="post-volatile" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      volatile
+    </h1>
+  
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2020/01/17/volatile/" class="article-date">
+  <time datetime="2020-01-17T01:59:40.768Z" itemprop="datePublished">2020-01-17</time>
+</a>
+        
+      </div>
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+      
+        <p>volatile<strong>关键字修饰变量具有以下特点</strong>：</p>
+<ol>
+<li>保证了变量的内存<strong>可见性</strong>。</li>
+<li>禁止指令重排序。(有序性)</li>
+</ol>
+<p><strong>可见性(Visibility)</strong> <strong>是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值</strong>。 正如上面“交互操作流程”中所说明的一样，JMM是通过在线程1变量工作内存修改后将新值同步回主内存，线程2在变量读取前从主内存刷新变量值，这种<strong>依赖主内存作为传递媒介</strong>的方式来实现可见性。</p>
+<p><strong>有序性(Ordering)</strong> 有序性规则表现在以下两种场景: 线程内和线程间</p>
+<ul>
+<li>线程内 从某个线程的角度看方法的执行，指令会按照一种叫“串行”（as-if-serial）的方式执行，此种方式已经应用于顺序编程语言。</li>
+<li>线程间 这个线程“观察”到其他线程并发地执行非同步的代码时，由于指令重排序优化，任何代码都有可能交叉执行。唯一起作用的约束是：对于同步方法，同步块(synchronized关键字修饰)以及volatile字段的操作仍维持相对有序</li>
+</ul>
+<p>demo:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cbl.keyworld;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ：CBL</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> ：Created in 2020/1/16  17:49</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>：</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VloatileDemo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Boolean FLAG=<span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * lock(锁定)：将一个变量标识为被一个线程独占状态。</span></span><br><span class="line"><span class="comment">     * unlock(解锁)：将一个变量从独占状态释放出来，释放后的变量才可以被其他线程锁定。</span></span><br><span class="line"><span class="comment">     * read(读取)：将一个变量的值从主内存传输到工作内存中，以便随后的load操作。</span></span><br><span class="line"><span class="comment">     * load(载入)：把read操作从主内存中得到的变量值放入工作内存的变量的副本中。</span></span><br><span class="line"><span class="comment">     * use(使用)：把工作内存中的一个变量的值传给执行引擎，每当虚拟机遇到一个使用到变量的指令时都会使用该指令。</span></span><br><span class="line"><span class="comment">     * assign(赋值)：把一个从执行引擎接收到的值赋给工作内存中的变量，每当虚拟机遇到一个给变量赋值的指令时，都要使用该操作。</span></span><br><span class="line"><span class="comment">     * store(存储)：把工作内存中的一个变量的值传递给主内存，以便随后的write操作。</span></span><br><span class="line"><span class="comment">     * write(写入)：把store操作从工作内存中得到的变量的值写到主内存中的变量</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> args</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        <span class="comment">//线程2</span></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            System.out.println(<span class="string">"wait................"</span>);</span><br><span class="line">            <span class="keyword">while</span> (!FLAG)&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">".....................success"</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//线程1</span></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            System.out.println(<span class="string">"start................"</span>);</span><br><span class="line">            FLAG=<span class="keyword">true</span>;</span><br><span class="line">            System.out.println(<span class="string">"end................"</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p>wait…………….<br>start…………….<br>end…………….</p>
+<p>流程图如下：</p>
+<p><img src="C:%5CUsers%5Ccblin%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1579169558232.png" alt="1579169558232"></p>
+<p>线程1改变了Flag，但是由于线程2已经获取了主内存中的变量，加载进了线程的运行内存，运行内存已经有了变量的副本变量，主内存发生改变了，副本内存的值不会发生改变。</p>
+<p>此时，FLAG变量假如有volatile修饰的话，当主内存发生改变，线程内的副本变量也会随之改变。</p>
+<p>加了volatile关键字之后的流程图如下：</p>
+<p><img src="C:%5CUsers%5Ccblin%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1579225775041.png" alt="1579225775041"></p>
+<p>volatile 其实底层就是加锁，利用了cpu总线嗅探机制，当线程1副本变量回写进主内存的时候，线程2的总线嗅探机制就会触发，会导致线程2里面的副本变量失效。当线程1在store操作的时候，就会进行lock操作，当完成write操作们就会释放锁。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/17/volatile/" data-id="ck5hiqi380006u8ut63aj9m23"
+         class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/01/15/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%AA%8C%E8%AF%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">微信开发者服务器验证</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+    </div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+<script src="/js/technology.js"></script>
+
+
+  </div>
+</body>
+</html>
